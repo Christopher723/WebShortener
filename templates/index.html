@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <form id="urlForm">
+        <label for="longUrl">Enter URL:</label><br>
+        <input type="text" id="longUrl" name="longUrl"><br>
+        <button type="submit">Shorten URL</button>
+    </form>
+    <div id="shortUrl"></div> <!-- This div is the anchor point -->
+
+    <a href="#shortUrl"></a> 
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const longUrl = document.getElementById('longUrl').value;
+            fetch('/shorten', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ longUrl: longUrl})
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('shortUrl').innerHTML = `<a href="${data}">${data}</a>`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+            });
+        });
+    </script>
+</body>
+</html>
